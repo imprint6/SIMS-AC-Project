@@ -28,7 +28,8 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: sims/backend
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_NAME: backend
+        IMAGE_TAG: ${{ git.run_number }}
       run: |
         docker build SIMS/WebAPI \
           --file SIMS/WebAPI/Dockerfile \
