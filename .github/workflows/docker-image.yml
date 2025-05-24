@@ -59,8 +59,7 @@ jobs:
           docker build \
             --file SIMS/AngularClient/hello-world/Dockerfile \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
-            SIMS/Angular
-
+            .
           # Push the versioned image
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
