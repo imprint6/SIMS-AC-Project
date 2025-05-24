@@ -28,7 +28,7 @@ jobs:
           # Use the run number as the image version
           echo "IMAGE_TAG=v${{ github.run_number }}" >> $GITHUB_ENV
 
-      - name: Build, tag, and push image to ECR
+      - name: Build, tag, and push backend image to ECR
         env:
           ECR_REGISTRY:   ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: sims/backend
@@ -37,6 +37,27 @@ jobs:
           # Build the Docker image with the dynamic tag
           docker build \
             --file SIMS/WebAPI/Dockerfile \
+            --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            SIMS/WebAPI
+
+          # Push the versioned image
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          # Tag and push 'latest'
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+                     $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+
+      - name: Build, tag, and push frontend image to ECR
+        env:
+          ECR_REGISTRY:   ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: sims/frontend
+          IMAGE_TAG:      ${{ env.IMAGE_TAG }}
+        run: |
+          # Build the Docker image with the dynamic tag
+          docker build \
+            --file SIMS/AngularClient/hello-world/Dockerfile \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             SIMS/WebAPI
 
